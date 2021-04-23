@@ -21,7 +21,7 @@ router.post('/register', validateNewUser, (req, res, next) => {
 
 router.post('/login', validateCredentials, async (req, res) => {
   const { username, password } = req.body;
-  res.status(200).json({ message: 'OK' });
+  res.status(200).json({ message: 'Logged in' });
   /*
 
     2- On SUCCESSFUL login,
