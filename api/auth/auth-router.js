@@ -18,21 +18,23 @@ async function validateCredentials(req, res, next) {
   }
 }
 
-router.post('/register', validateCredentials, (req, res) => {
+router.post('/register', validateCredentials, (req, res, next) => {
   const { username, password } = req.body;
   const hash = bcrypt.hashSync(password, 8);
+  const userInfo = {
+    username,
+    password: hash,
+  };
 
-  res.end('implement register, please!');
+  Users.addUser(userInfo)
+    .then((user) => {
+      res.status(201).json(user);
+    })
+    .catch(next);
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
     DO NOT EXCEED 2^8 ROUNDS OF HASHING!
-
-    1- In order to register a new account the client must provide `username` and `password`:
-      {
-        "username": "Captain Marvel", // must not exist already in the `users` table
-        "password": "foobar"          // needs to be hashed before it's saved
-      }
 
     2- On SUCCESSFUL registration,
       the response body should have `id`, `username` and `password`:
