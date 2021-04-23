@@ -18,15 +18,17 @@ async function validateNewUser(req, res, next) {
 }
 
 async function validateCredentials(req, res, next) {
-  const databaseUser = await Users.getUserBy(req.body.username);
   const { username, password } = req.body;
   if (!username || !password) {
     next({ status: 400, message: 'username and password required' });
-  } else if (databaseUser && bcrypt.compareSync(req.body.password, databaseUser.password)) {
-    req.body.id = databaseUser.id;
-    next();
   } else {
-    next({ message: 'invalid credentials' });
+    const databaseUser = await Users.getUserBy(req.body.username);
+    if (databaseUser && bcrypt.compareSync(req.body.password, databaseUser.password)) {
+      req.body.id = databaseUser.id;
+      next();
+    } else {
+      next({ message: 'invalid credentials' });
+    }
   }
 }
 

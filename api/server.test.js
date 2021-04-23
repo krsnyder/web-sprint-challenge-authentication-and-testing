@@ -70,3 +70,18 @@ describe('Auth Endpoints', () => {
     });
   });
 });
+
+describe('Joke Endpoint', () => {
+  it('returns jokes with valid token', async () => {
+    await request(server).post('/api/auth/register')
+      .send({
+        username: 'Nardwuar',
+        password: '1234',
+      });
+    const res = await request(server).post('/api/auth/login').send({
+      username: 'Nardwuar',
+      password: '1234',
+    });
+    const { token } = res.body;
+  });
+});
