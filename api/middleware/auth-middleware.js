@@ -23,6 +23,7 @@ async function validateCredentials(req, res, next) {
   if (!username || !password) {
     next({ status: 400, message: 'username and password required' });
   } else if (databaseUser && bcrypt.compareSync(req.body.password, databaseUser.password)) {
+    req.body.id = databaseUser.id;
     next();
   } else {
     next({ message: 'invalid credentials' });

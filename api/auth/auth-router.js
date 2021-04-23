@@ -20,22 +20,28 @@ router.post('/register', validateNewUser, (req, res, next) => {
 });
 
 router.post('/login', validateCredentials, async (req, res) => {
-  const { username, password } = req.body;
-  res.status(200).json({ message: 'Logged in' });
-  /*
+  const user = req.body;
+  const token = buildToken(user);
+  res.status(200).json({ message: `welcome, ${user.username}`, token });
 
+  function buildToken(user) {
+    const payload = {
+      subject: user.id,
+      username: user.username,
+    };
+    const config = {
+      expiresIn: '30m',
+    };
+    return jwt.sign(payload, process.env.JWT_SECRET, config);
+  }
+
+  /*
     2- On SUCCESSFUL login,
       the response body should have `message` and `token`:
       {
         "message": "welcome, Captain Marvel",
         "token": "eyJhbGciOiJIUzI ... ETC ... vUPjZYDSa46Nwz8"
       }
-
-    3- On FAILED login due to `username` or `password` missing from the request body,
-      the response body should include a string exactly as follows: "username and password required".
-
-    4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
-      the response body should include a string exactly as follows: "invalid credentials".
   */
 });
 
