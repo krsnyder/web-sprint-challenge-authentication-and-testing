@@ -25,10 +25,10 @@ router.post('/login', validateCredentials, async (req, res) => {
   const token = buildToken(user);
   res.status(200).json({ message: `welcome, ${user.username}`, token });
 
-  function buildToken(user) {
+  function buildToken(info) {
     const payload = {
-      subject: user.id,
-      username: user.username,
+      subject: info.id,
+      username: info.username,
     };
     const config = {
       expiresIn: '30m',

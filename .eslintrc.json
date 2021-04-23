@@ -13,6 +13,8 @@
         "ecmaVersion": 12
     },
     "rules": {
-        "max-len": "off"
+        "max-len": "off",
+        "no-use-before-define": "off",
+        "no-unused-vars": "off"
     }
 }
