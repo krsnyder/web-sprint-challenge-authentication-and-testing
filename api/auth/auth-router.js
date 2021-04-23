@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config/secrets');
 const Users = require('./auth-model');
 const { validateNewUser, validateCredentials } = require('../middleware/auth-middleware');
 
@@ -32,7 +33,7 @@ router.post('/login', validateCredentials, async (req, res) => {
     const config = {
       expiresIn: '30m',
     };
-    return jwt.sign(payload, process.env.JWT_SECRET, config);
+    return jwt.sign(payload, jwtSecret, config);
   }
 
   /*
