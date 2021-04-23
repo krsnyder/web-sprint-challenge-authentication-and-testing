@@ -20,7 +20,7 @@ it('process.env.NODE_ENV must be "testing"', () => {
 });
 
 describe('Auth Endpoints', () => {
-  describe('[POST] request', () => {
+  describe('[POST] register request', () => {
     it('adds a record to the db', async () => {
       await request(server)
         .post('/api/auth/register')
@@ -39,6 +39,34 @@ describe('Auth Endpoints', () => {
           password: '1234',
         });
       expect(user.body.username).toEqual('KittyCat');
+    });
+  });
+  describe('[POST] login request', () => {
+    it('returns a token', async () => {
+      // Before we can login we need to add a user to the db
+      await request(server)
+        .post('/api/auth/register')
+        .send({
+          username: 'Nardwuar',
+          password: '1234',
+        });
+      const res = await request(server)
+        .post('/api/auth/login').send({
+          username: 'Nardwuar',
+          password: '1234',
+        });
+      const { token } = res.body;
+      expect(token).not.toBeNull();
+      expect(token).toBeTruthy();
+    });
+    it('rejects invalid credentials', async () => {
+      const res = await request(server)
+        .post('/api/auth/login').send({
+          username: 'BadBadMan',
+          password: '1234',
+        });
+      const { status } = res;
+      expect(status).toBe(500);
     });
   });
 });
