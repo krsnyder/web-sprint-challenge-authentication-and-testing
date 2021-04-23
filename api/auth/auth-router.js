@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const Users = require('./auth-model');
-const { validateCredentials } = require('../middleware/auth-middleware');
+const { validateNewUser, validateCredentials } = require('../middleware/auth-middleware');
 
-router.post('/register', validateCredentials, (req, res, next) => {
+router.post('/register', validateNewUser, (req, res, next) => {
   const { username, password } = req.body;
   const hash = bcrypt.hashSync(password, 8);
   const userInfo = {
@@ -18,17 +19,10 @@ router.post('/register', validateCredentials, (req, res, next) => {
     .catch(next);
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', validateCredentials, async (req, res) => {
+  const { username, password } = req.body;
+  res.status(200).json({ message: 'OK' });
   /*
-    IMPLEMENT
-    You are welcome to build additional middlewares to help with the endpoint's functionality.
-
-    1- In order to log into an existing account the client must provide `username` and `password`:
-      {
-        "username": "Captain Marvel",
-        "password": "foobar"
-      }
 
     2- On SUCCESSFUL login,
       the response body should have `message` and `token`:

@@ -1,6 +1,7 @@
+const bcrypt = require('bcryptjs');
 const Users = require('../auth/auth-model');
 
-async function validateCredentials(req, res, next) {
+async function validateNewUser(req, res, next) {
   const { username, password } = req.body;
   try {
     const user = await Users.getUserBy(username);
@@ -16,6 +17,19 @@ async function validateCredentials(req, res, next) {
   }
 }
 
+async function validateCredentials(req, res, next) {
+  const user = await Users.getUserBy(req.body.username);
+
+  if (user && bcrypt.compareSync(req.body.password, user.password)) {
+    res.status(200).json({ message: 'Logged in' });
+  } else {
+    console.log(user);
+    console.log(req.body);
+    next({ message: 'Fail' });
+  }
+}
+
 module.exports = {
+  validateNewUser,
   validateCredentials,
 };
