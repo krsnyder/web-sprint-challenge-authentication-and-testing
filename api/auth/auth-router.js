@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const Users = require('./auth-model');
 
 async function validateCredentials(req, res, next) {
-  next();
   const { username, password } = req.body;
   try {
     const user = await Users.getUserBy(username);
@@ -20,6 +19,9 @@ async function validateCredentials(req, res, next) {
 }
 
 router.post('/register', validateCredentials, (req, res) => {
+  const { username, password } = req.body;
+  const hash = bcrypt.hashSync(password, 8);
+
   res.end('implement register, please!');
   /*
     IMPLEMENT
