@@ -1,7 +1,7 @@
 const db = require('../../data/dbConfig');
 
-function getUserBy(filter) {
-  return db('users').where({ filter }).first();
+function getUserBy(username) {
+  return db('users').where({ username }).first();
 }
 
 async function addUser(newUser) {
