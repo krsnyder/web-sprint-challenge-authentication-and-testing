@@ -2,6 +2,7 @@ const request = require('supertest');
 const server = require('./server');
 const db = require('../data/dbConfig');
 const Users = require('./auth/auth-model');
+const { set } = require('./server');
 
 // Need two tests per endpoint.
 // Endpoints are '/api/auth/register, 'api/auth/login', and 'api/jokes'
@@ -82,6 +83,12 @@ describe('Joke Endpoint', () => {
       username: 'Nardwuar',
       password: '1234',
     });
-    const { token } = res.body;
+    const getRequest = await request(server).get('/api/jokes').set('Authorization', res.body.token);
+    const jokes = getRequest.body;
+    expect(jokes).toHaveLength(3);
+  });
+  it('returns a 401 status when no token present', async () => {
+    const res = await request(server).get('/api/jokes');
+    expect(res.status).toBe(401);
   });
 });
