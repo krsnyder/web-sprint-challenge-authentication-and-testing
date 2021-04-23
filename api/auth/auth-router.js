@@ -35,15 +35,6 @@ router.post('/login', validateCredentials, async (req, res) => {
     };
     return jwt.sign(payload, jwtSecret, config);
   }
-
-  /*
-    2- On SUCCESSFUL login,
-      the response body should have `message` and `token`:
-      {
-        "message": "welcome, Captain Marvel",
-        "token": "eyJhbGciOiJIUzI ... ETC ... vUPjZYDSa46Nwz8"
-      }
-  */
 });
 
 module.exports = router;
