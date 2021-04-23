@@ -1,22 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const Users = require('./auth-model');
-
-async function validateCredentials(req, res, next) {
-  const { username, password } = req.body;
-  try {
-    const user = await Users.getUserBy(username);
-    if (!username || !password) {
-      res.status(400).json({ message: 'username and password required' });
-    } else if (user) {
-      res.status(400).json({ message: 'username taken' });
-    } else {
-      next();
-    }
-  } catch (err) {
-    next(err);
-  }
-}
+const { validateCredentials } = require('../middleware/auth-middleware');
 
 router.post('/register', validateCredentials, (req, res, next) => {
   const { username, password } = req.body;
